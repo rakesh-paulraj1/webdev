@@ -65,7 +65,7 @@ $scalability_score = $input['scalability_score'] ?? null;
 $sustainability_score = $input['sustainability_score'] ?? null;
 $comment = $input['comment'] ?? null;
 $score = $input['score'] ?? null;
-$status=$input['status']??null;
+$status = $input['status'] ?? null;
 
 // Check if required fields are present
 if (empty($idea_id) || empty($evaluator_id)) {
@@ -103,46 +103,42 @@ if ($evaluator_count == 0) {
 }
 
 try {
-    // Update the evaluator's scores in the database
-    $stmt = $conn->prepare("
-        UPDATE idea_evaluators
-        SET 
-            score = ?, 
-            evaluator_comments = ?, 
-            noveltyScore = ?, 
-            usefullness = ?, 
-            feasability = ?, 
-            scalability = ?, 
-            sustainability = ?
-            status=?
-        WHERE idea_id = ? AND evaluator_id = ?
+
+    $stmt_check_evaluation_count = $conn->prepare("
+        SELECT COUNT(*) 
+        FROM idea_evaluators 
+        WHERE idea_id = ? AND score IS NOT NULL
     ");
-    
-    $stmt->bind_param(
-        "dsddddiii", 
-        $score, 
-        $comment, 
-        $novelty_score, 
-        $usefulness_score, 
-        $feasability_score, 
-        $scalability_score, 
-        $sustainability_score, 
-        $idea_id, 
-        $evaluator_id,
-        $status
-    );
+    $stmt_check_evaluation_count->bind_param("i", $idea_id);
+    $stmt_check_evaluation_count->execute();
+    $stmt_check_evaluation_count->bind_result($evaluation_count);
+    $stmt_check_evaluation_count->fetch();
+    $stmt_check_evaluation_count->free_result();
 
-    $stmt->execute();
+   
+    if ($evaluation_count === 3) {
+     
+        $stmt_check_scores = $conn->prepare("
+            SELECT COUNT(*) 
+            FROM idea_evaluators 
+            WHERE idea_id = ? AND score > 35
+        ");
+        $stmt_check_scores->bind_param("i", $idea_id);
+        $stmt_check_scores->execute();
+        $stmt_check_scores->bind_result($high_score_count);
+        $stmt_check_scores->fetch();
+        $stmt_check_scores->free_result();
 
-    if ($stmt->affected_rows > 0) {
-        echo json_encode(["success" => "Evaluator scores successfully updated."]);
-    } else {
-        http_response_code(404);
-        echo json_encode(["error" => "No record found to update for the given idea_id and evaluator_id."]);
+        // Update the state of the idea based on the number of high scores
+        $state = ($high_score_count >= 2) ? 1 : 0;
+
+        $stmt_update_state = $conn->prepare("UPDATE ideas SET state = ? WHERE id = ?");
+        $stmt_update_state->bind_param("ii", $state, $idea_id);
+        $stmt_update_state->execute();
     }
 } catch (Exception $e) {
     http_response_code(500);
-    echo json_encode(["error" => "Failed to update evaluator scores: " . $e->getMessage()]);
+    echo json_encode(["error" => "Failed to update idea state: " . $e->getMessage()]);
 }
 
 ?>
