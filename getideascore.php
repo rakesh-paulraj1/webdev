@@ -46,9 +46,13 @@ $stmt = $conn->prepare(
         ie.usefullness AS usefulness_score,
         ie.feasability AS feasibility_score,
         ie.scalability AS scalability_score,
-        ie.sustaiblity AS sustainability_score,
-        i.title AS idea_title,
-        i.description AS idea_description
+        ie.sustainability AS sustainability_score,
+        i.idea_title AS idea_title,
+        i.idea_description AS idea_description,
+        i.student_name AS student_name,
+        i.school AS school,
+        i.type AS idea_type
+
      FROM idea_evaluators ie
      JOIN evaluator e ON ie.evaluator_id = e.id
      JOIN ideas i ON ie.idea_id = i.id
