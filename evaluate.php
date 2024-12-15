@@ -1,10 +1,10 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:5173"); // Replace with your frontend URL
+header("Access-Control-Allow-Origin: http://localhost:5173");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Access-Control-Allow-Credentials: true");
 
-// Handle preflight requests
+
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
@@ -12,8 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-require 'vendor/autoload.php'; // Include JWT library (e.g., Firebase JWT)
-require 'db.php'; // Include database connection
+require 'vendor/autoload.php';
+require 'db.php';
 $secretKey = "sic";
 
 function checkJwtCookie() {
@@ -47,7 +47,7 @@ function checkJwtCookie() {
 
 $user = checkJwtCookie();
 
-// Get JSON input and decode it
+
 $input = json_decode(file_get_contents("php://input"), true);
 
 // Extract data from the request
@@ -69,10 +69,9 @@ if (empty($idea_id) || empty($evaluator_id)) {
     exit();
 }
 
-// [Unchanged code for validating `idea_id` and `evaluator_id`]
 
 try {
-    // Update `idea_evaluators` table
+   
     $stmt_update_evaluator = $conn->prepare(
         "UPDATE idea_evaluators 
         SET noveltyScore = ?, usefullness = ?, feasability = ?, scalability = ?, 
@@ -93,7 +92,7 @@ try {
     }
     $stmt_update_evaluator->close();
 
-    // Check the number of evaluations with non-null scores
+    
     $stmt_check_evaluation_count = $conn->prepare(
         "SELECT COUNT(*) FROM idea_evaluators WHERE idea_id = ? AND score IS NOT NULL"
     );
@@ -104,7 +103,7 @@ try {
     $stmt_check_evaluation_count->close();
 
     if ($evaluation_count == 3) {
-        // Check the number of evaluations with scores > 35
+        
         $stmt_check_scores = $conn->prepare(
             "SELECT COUNT(*) FROM idea_evaluators WHERE idea_id = ? AND score > 35"
         );
@@ -114,7 +113,7 @@ try {
         $stmt_check_scores->fetch();
         $stmt_check_scores->close();
 
-        // Update the state of the idea based on the number of high scores
+      
         $state = ($high_score_count >= 2) ? 1 : 0;
 
         $stmt_update_state = $conn->prepare("UPDATE ideas SET state = ? WHERE id = ?");

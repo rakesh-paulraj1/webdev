@@ -4,7 +4,7 @@ header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 require 'vendor/autoload.php';
-require 'db.php';  // Include your database connection file
+require 'db.php';
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
@@ -68,6 +68,19 @@ function isEmailRegistered($email) {
 
     return $isRegistered;
 }
+function isEmailInAdminTable($email) {
+    global $conn;
+    $query = "SELECT id FROM admin WHERE email = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->store_result();
+
+    $exists = $stmt->num_rows > 0;
+    $stmt->close();
+
+    return $exists;
+}
 
 // Function to validate if theme IDs exist in the theme table
 function validateThemeIds($theme_ids) {
@@ -117,6 +130,10 @@ function handleSignup($data) {
         echo json_encode(["error" => "Email is already registered."]);
         exit;
     }
+    if (isEmailInAdminTable($email)) {
+        echo json_encode(["error" => "Email is already registered ."]);
+        exit;
+    }
 
     $phone_number = sanitizeInput($data['phone_number']);
     $password = password_hash(sanitizeInput($data['password']), PASSWORD_DEFAULT);
@@ -150,7 +167,7 @@ function handleSignup($data) {
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     if (!$stmt) {
-        echo json_encode(["error" => "Failed to prepare SQL statement: " . $conn->error]);
+        echo json_encode(["error" => "Failed to prepare SQL statement: " ]);
         exit;
     }
 
@@ -166,7 +183,7 @@ function handleSignup($data) {
     if ($stmt->execute()) {
         echo json_encode(["message" => "Evaluator registered successfully!"]);
     } else {
-        echo json_encode(["error" => "Database error: " . $stmt->error]);
+        echo json_encode(["error" => "Database error: "]);
     }
 
     $stmt->close();
