@@ -1,9 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:5173");
-header("Access-Control-Allow-Credentials: true");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
-
+require 'cors.php';
 require 'vendor/autoload.php';
 require 'db.php';  // Include your database connection file
 use Firebase\JWT\JWT;
@@ -66,7 +62,7 @@ if ($evaluator_id === null) {
 }
 
 // Ensure the evaluator exists and is active
-$stmt = $conn->prepare("SELECT id FROM evaluator WHERE id = ? AND evaluator_status = 1");
+$stmt = $conn->prepare("SELECT id FROM sic_qa_evaluator WHERE id = ? AND evaluator_status = 1");
 $stmt->bind_param("i", $evaluator_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -104,7 +100,7 @@ if (empty($updateFields)) {
 $updateValues[] = $evaluator_id;
 
 // Prepare and execute the update query
-$updateQuery = "UPDATE evaluator SET " . implode(", ", $updateFields) . " WHERE id = ?";
+$updateQuery = "UPDATE sic_qa_evaluator SET " . implode(", ", $updateFields) . " WHERE id = ?";
 $stmt = $conn->prepare($updateQuery);
 $stmt->bind_param(str_repeat("s", count($updateValues) - 1) . "i", ...$updateValues);
 

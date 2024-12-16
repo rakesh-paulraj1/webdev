@@ -1,20 +1,6 @@
 <?php
 // Handle the preflight (OPTIONS) request
-if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-    header("Access-Control-Allow-Origin: http://localhost:5173");  // Allow your frontend's origin
-    header("Access-Control-Allow-Credentials: true");              // Allow credentials (if needed)
-    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");    // Allowed methods
-    header("Access-Control-Allow-Headers: Content-Type, Authorization");  // Allowed headers
-    header("Access-Control-Max-Age: 86400"); // Cache preflight request for 24 hours
-    exit;  // End the script after handling the OPTIONS request
-}
-
-
-header("Access-Control-Allow-Origin: http://localhost:5173");  // Allow your frontend's origin
-header("Access-Control-Allow-Credentials: true");              // Allow credentials (if needed)
-header("Access-Control-Allow-Methods: POST, OPTIONS, GET");         // Allowed methods
-header("Access-Control-Allow-Headers: Content-Type, Authorization");  // Allowed headers
-
+require 'cors.php';
 // Include database connection
 include 'db.php';
 
@@ -53,9 +39,9 @@ $stmt = $conn->prepare(
         i.school AS school,
         i.type AS idea_type
 
-     FROM idea_evaluators ie
-     JOIN evaluator e ON ie.evaluator_id = e.id
-     JOIN ideas i ON ie.idea_id = i.id
+     FROM sic_qa_idea_evaluators ie
+     JOIN sic_qa_evaluator e ON ie.evaluator_id = e.id
+     JOIN sic_qa_ideas i ON ie.idea_id = i.id
      WHERE ie.idea_id = ? AND ie.evaluator_id = ?"
 );
 $stmt->bind_param("ii", $idea_id, $evaluator_id);

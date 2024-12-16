@@ -1,10 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:5173");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
-header("Access-Control-Allow-Credentials: true");
-
-
+require 'cors.php';
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
@@ -73,7 +68,7 @@ if (empty($idea_id) || empty($evaluator_id)) {
 try {
    
     $stmt_update_evaluator = $conn->prepare(
-        "UPDATE idea_evaluators 
+        "UPDATE sic_qa_idea_evaluators 
         SET noveltyScore = ?, usefullness = ?, feasability = ?, scalability = ?, 
             sustainability = ?, evaluator_comments = ?, score = ?, status = ? 
         WHERE idea_id = ? AND evaluator_id = ?"
@@ -94,7 +89,7 @@ try {
 
     
     $stmt_check_evaluation_count = $conn->prepare(
-        "SELECT COUNT(*) FROM idea_evaluators WHERE idea_id = ? AND score IS NOT NULL"
+        "SELECT COUNT(*) FROM sic_qa_idea_evaluators WHERE idea_id = ? AND score IS NOT NULL"
     );
     $stmt_check_evaluation_count->bind_param("i", $idea_id);
     $stmt_check_evaluation_count->execute();
@@ -105,7 +100,7 @@ try {
     if ($evaluation_count == 3) {
         
         $stmt_check_scores = $conn->prepare(
-            "SELECT COUNT(*) FROM idea_evaluators WHERE idea_id = ? AND score > 35"
+            "SELECT COUNT(*) FROM sic_qa_idea_evaluators WHERE idea_id = ? AND score > 35"
         );
         $stmt_check_scores->bind_param("i", $idea_id);
         $stmt_check_scores->execute();
@@ -116,7 +111,7 @@ try {
       
         $state = ($high_score_count >= 2) ? 1 : 0;
 
-        $stmt_update_state = $conn->prepare("UPDATE ideas SET state = ? WHERE id = ?");
+        $stmt_update_state = $conn->prepare("UPDATE sic_qa_ideas SET state = ? WHERE id = ?");
         $stmt_update_state->bind_param("ii", $state, $idea_id);
         $stmt_update_state->execute();
         $stmt_update_state->close();

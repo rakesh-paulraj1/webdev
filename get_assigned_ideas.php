@@ -1,9 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:5173");
-header("Access-Control-Allow-Credentials: true");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
-
+require 'cors.php';
 // Handle preflight requests (OPTIONS method)
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -59,8 +55,8 @@ function getIdeasByEvaluatorId($evaluatorId) {
 
     $query = "
     SELECT i.*,ie.status
-    FROM ideas i
-    INNER JOIN idea_evaluators ie ON i.id = ie.idea_id
+    FROM sic_qa_ideas i
+    INNER JOIN sic_qa_idea_evaluators ie ON i.id = ie.idea_id
     WHERE ie.evaluator_id = ?
 ";
 

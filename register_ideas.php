@@ -2,11 +2,7 @@
 
 require_once __DIR__ . '/vendor/autoload.php'; 
 
-header("Access-Control-Allow-Origin: http://localhost:5173");
-header("Access-Control-Allow-Credentials: true");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
-
+require 'cors.php';
 // Handle pre-flight OPTIONS request (CORS)
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -70,7 +66,7 @@ $status_id = 3; // Default status: Pending
 $conn->autocommit(false);
 
 try {
-    $stmt = $conn->prepare("INSERT INTO ideas (student_name, school, idea_title, status_id, theme_id, type, idea_description) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO sic_qa_ideas (student_name, school, idea_title, status_id, theme_id, type, idea_description) VALUES (?, ?, ?, ?, ?, ?, ?)");
 
     foreach ($input as $idea) {
         // Validate fields

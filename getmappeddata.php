@@ -1,21 +1,6 @@
 <?php
 // Handle the preflight (OPTIONS) request
-if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-    header("Access-Control-Allow-Origin: http://localhost:5173");  // Allow your frontend's origin
-    header("Access-Control-Allow-Credentials: true");              // Allow credentials (if needed)
-    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");    // Allowed methods
-    header("Access-Control-Allow-Headers: Content-Type, Authorization");  // Allowed headers
-    header("Access-Control-Max-Age: 86400"); // Cache preflight request for 24 hours
-    exit;  // End the script after handling the OPTIONS request
-}
-
-// The following headers will be applied to the actual request
-header("Access-Control-Allow-Origin: http://localhost:5173");  // Allow your frontend's origin
-header("Access-Control-Allow-Credentials: true");              // Allow credentials (if needed)
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");    // Allowed methods
-header("Access-Control-Allow-Headers: Content-Type, Authorization");  // Allowed headers
-
-// Include database connection
+require 'cors.php';
 include 'db.php';
 
 // Get the idea_id from query parameters
@@ -29,8 +14,8 @@ if (empty($idea_id)) {
 // Prepare the SQL query to fetch the mapped evaluators for the given idea_id
 $stmt = $conn->prepare(
     "SELECT ie.evaluator_id, CONCAT(e.first_name, ' ', e.last_name) AS evaluator_name, ie.score, ie.evaluator_comments
-     FROM idea_evaluators ie
-     JOIN evaluator e ON ie.evaluator_id = e.id
+     FROM sic_qa_idea_evaluators ie
+     JOIN sic_qa_evaluator e ON ie.evaluator_id = e.id
      WHERE ie.idea_id = ?"
 );
 $stmt->bind_param("i", $idea_id);

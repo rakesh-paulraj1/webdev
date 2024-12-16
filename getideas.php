@@ -1,8 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:5173");
-header("Access-Control-Allow-Credentials: true");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
+require 'cors.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -48,7 +45,7 @@ function checkJwtCookie() {
 checkJwtCookie();
 
 // Fetch all ideas
-$stmt = $conn->prepare("SELECT * FROM ideas");
+$stmt = $conn->prepare("SELECT * FROM sic_qa_ideas");
 $stmt->execute();
 $result = $stmt->get_result();
 

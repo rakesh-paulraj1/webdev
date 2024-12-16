@@ -1,9 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:5173");
-header("Access-Control-Allow-Credentials: true");
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
-
+require 'cors.php';
 // Handle preflight requests (OPTIONS method)
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -71,9 +67,8 @@ function getEvaluatorById($id) {
 
     $query = "SELECT id, first_name, last_name, email, phone_number, city, gender, college_name, designation, 
                      knowledge_domain, theme_preference_1, theme_preference_2, theme_preference_3, role_interested, 
-                     evaluator_status, expertise_in_startup_value_chain, alternate_email, alternate_phone_number, 
-                     total_experience, state 
-              FROM evaluator 
+                     evaluator_status, expertise_in_startup_value_chain, alternate_email, alternate_phone_number,total_experience,languages_known, state 
+              FROM sic_qa_evaluator 
               WHERE id = ? AND delete_status = 0";
 
     $stmt = $conn->prepare($query);

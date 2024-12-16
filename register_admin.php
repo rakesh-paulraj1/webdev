@@ -1,4 +1,5 @@
 <?php
+require 'cors.php';
 require 'vendor/autoload.php';
 require 'db.php';
 
@@ -29,7 +30,7 @@ $email = sanitizeInput($data['email']);
 $password = password_hash($data['password'], PASSWORD_BCRYPT);
 
 // Check if email already exists in the admin table
-$stmt = $conn->prepare("SELECT id FROM admin WHERE email = ?");
+$stmt = $conn->prepare("SELECT id FROM sic_qa_admin WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $stmt->store_result();
@@ -39,7 +40,7 @@ if ($stmt->num_rows > 0) {
 }
 
 // Insert new user into the admin table
-$stmt = $conn->prepare("INSERT INTO admin (name, email, password, delete_status, created_at) VALUES (?, ?, ?, 0, NOW())");
+$stmt = $conn->prepare("INSERT INTO sic_qa_admin (name, email, password, delete_status, created_at) VALUES (?, ?, ?, 0, NOW())");
 $stmt->bind_param("sss", $name, $email, $password);
 
 if ($stmt->execute()) {

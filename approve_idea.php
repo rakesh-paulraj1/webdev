@@ -1,8 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:5173");
-header("Access-Control-Allow-Credentials: true");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
+require 'cors.php';
 
 // Handle preflight requests (OPTIONS method)
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -77,7 +74,7 @@ $conn->autocommit(false);
 
 try {
     // Check if the idea exists and has a status of 3 (Pending)
-    $stmt = $conn->prepare("SELECT status_id FROM ideas WHERE id = ? AND status_id = 3");
+    $stmt = $conn->prepare("SELECT status_id FROM sic_qc_ideas WHERE id = ? AND status_id = 3");
     $stmt->bind_param("i", $idea_id);
     $stmt->execute();
     $stmt->store_result();
@@ -88,7 +85,7 @@ try {
     }
 
     // Update the status of the idea to 1 (Active)
-    $stmt = $conn->prepare("UPDATE ideas SET status_id = 1 WHERE id = ?");
+    $stmt = $conn->prepare("UPDATE sic_qc_ideas SET status_id = 1 WHERE id = ?");
     $stmt->bind_param("i", $idea_id);
     $stmt->execute();
 

@@ -1,13 +1,33 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:5173");
+
+$origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '*';
+
+// Define allowed origins (add your frontend URLs here)
+$allowedOrigins = [
+    'http://localhost:5173',  // Example frontend for development
+    'http://example.com',     // Example production URL
+];
+
+// Check if the origin is allowed or fallback to '*'
+if (in_array($origin, $allowedOrigins)) {
+    header("Access-Control-Allow-Origin: $origin");
+} else {
+    header("Access-Control-Allow-Origin: *"); // Allow all (use with caution in production)
+}
+
+// Always set credentials
 header("Access-Control-Allow-Credentials: true");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
+
+// Define allowed methods and headers
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
+// Handle preflight (OPTIONS) requests
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
+
 
 require 'vendor/autoload.php';
 require 'db.php'; 
@@ -41,9 +61,9 @@ function generateToken($email, $role, $id, $secretKey) {
     ];
     return JWT::encode($payload, $secretKey, 'HS256');
 }
-
+$expirationTime = time() + (86400 * 7);
 // Check credentials in the evaluator table
-$stmt = $conn->prepare("SELECT id, password FROM evaluator WHERE email = ?");
+$stmt = $conn->prepare("SELECT id, password FROM sic_qa_evaluator WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $stmt->store_result();
@@ -56,11 +76,10 @@ if ($stmt->num_rows > 0) {
         $jwt = generateToken($email, "evaluator", $id, $secretKey);
 
         setcookie("auth_token", $jwt, [
-            'expires' => time() + (86400 * 7),  // 7 days expiration
+            'expires' => $expirationTime,
             'path' => '/',
-            'httponly' => true,
-            'secure' => isset($_SERVER['HTTPS']),  
-            'samesite' => 'Strict'
+            'httponly' => false,
+            'secure' => false,
         ]);
 
         echo json_encode(["message" => "success", "role" => "evaluator", "id" => $id]);
@@ -73,7 +92,7 @@ if ($stmt->num_rows > 0) {
 }
 
 
-$stmt = $conn->prepare("SELECT id, password FROM admin WHERE email = ?");
+$stmt = $conn->prepare("SELECT id, password FROM sic_qa_admin WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $stmt->store_result();
@@ -86,11 +105,10 @@ if ($stmt->num_rows > 0) {
         $jwt = generateToken($email, "admin", $id, $secretKey);
 
         setcookie("auth_token", $jwt, [
-            'expires' => time() + (86400 * 7),
+            'expires' => $expirationTime,
             'path' => '/',
-            'httponly' => true,
-            'secure' => isset($_SERVER['HTTPS']),  
-            'samesite' => 'Strict'
+            'httponly' => false,
+            'secure' => false,
         ]);
 
         echo json_encode(["message" => "success", "role" => "admin", "id" => $id]);

@@ -1,8 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:5173");
-header("Access-Control-Allow-Credentials: true");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
+require 'cors.php';
 require 'vendor/autoload.php';
 require 'db.php';
 use Firebase\JWT\JWT;
@@ -58,7 +55,7 @@ function sanitizeInput($data) {
 // Function to check if an email is already registered
 function isEmailRegistered($email) {
     global $conn;
-    $query = "SELECT id FROM evaluator WHERE email = ?";
+    $query = "SELECT id FROM sic_qa_evaluator WHERE email = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -88,7 +85,7 @@ function validateThemeIds($theme_ids) {
     $validThemeIds = [];
 
     foreach ($theme_ids as $theme_id) {
-        $query = "SELECT id FROM theme WHERE id = ?";
+        $query = "SELECT id FROM sic_qa_theme WHERE id = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param("i", $theme_id);
         $stmt->execute();
@@ -134,7 +131,7 @@ function handleSignup($data) {
         echo json_encode(["error" => "Email is already registered ."]);
         exit;
     }
-
+    $languages_known = isset($data['languages_known']) && is_array($data['languages_known']) ? json_encode($data['languages_known']) : null;
     $phone_number = sanitizeInput($data['phone_number']);
     $password = password_hash(sanitizeInput($data['password']), PASSWORD_DEFAULT);
     $alternate_email = sanitizeInput($data['alternate_email']);
@@ -159,12 +156,12 @@ function handleSignup($data) {
         exit;
     }
 
-    $stmt = $conn->prepare("INSERT INTO evaluator (
+    $stmt = $conn->prepare("INSERT INTO sic_qa_evaluator (
         first_name, last_name, gender, email, alternate_email, phone_number, 
         alternate_phone_number, college_name, designation, total_experience, 
         city, state, knowledge_domain, theme_preference_1, theme_preference_2, 
-        theme_preference_3, expertise_in_startup_value_chain, role_interested, password, evaluator_status
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        theme_preference_3, expertise_in_startup_value_chain, role_interested, password, evaluator_status,languages_known
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     if (!$stmt) {
         echo json_encode(["error" => "Failed to prepare SQL statement: " ]);
@@ -172,12 +169,12 @@ function handleSignup($data) {
     }
 
     $stmt->bind_param(
-        "ssssssssissssssssssi",
+        "ssssssssissssssssssis",
         $first_name, $last_name, $gender, $email, $alternate_email, $phone_number,
         $alternate_phone_number, $college_name, $designation, $total_experience,
         $city, $state, $knowledge_domain, $theme_preference_1, $theme_preference_2,
         $theme_preference_3, $expertise_in_startup_value_chain, $role_interested,
-        $password, $evaluator_status
+        $password, $evaluator_status,$languages_known
     );
 
     if ($stmt->execute()) {

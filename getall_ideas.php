@@ -1,10 +1,6 @@
 `<?php
 // Set CORS headers
-header("Access-Control-Allow-Origin: http://localhost:5173");
-header("Access-Control-Allow-Credentials: true");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
-
+require 'cors.php';
 // Handle preflight requests (OPTIONS method)
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -84,7 +80,7 @@ try {
 
     // Fetch ideas assigned to the evaluator if role is 'evaluator'
     if ($role === 'evaluator') {
-        $stmt = $conn->prepare("SELECT * FROM ideas WHERE assigned_count = ?");
+        $stmt = $conn->prepare("SELECT * FROM sic_qa_ideas WHERE assigned_count = ?");
         $stmt->bind_param("s", $role);
 
     // Fetch all ideas if role is 'admin'

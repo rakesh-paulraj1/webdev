@@ -1,11 +1,6 @@
 <?php
 // Enable CORS headers to allow frontend requests
-header("Access-Control-Allow-Origin: http://localhost:5173");  // Allow your frontend origin
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");  // Allow specific methods
-header("Access-Control-Allow-Headers: Content-Type, Authorization");  // Allow headers (like Content-Type and Authorization)
-header("Access-Control-Allow-Credentials: true");  // Allow cookies and credentials
-
-// Display the current cookies for debugging purposes
+require 'cors.php';
 echo "<pre>";
 print_r($_COOKIE); 
 echo "</pre>";

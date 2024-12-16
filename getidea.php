@@ -1,8 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:5173");
-header("Access-Control-Allow-Credentials: true");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
+require 'cors.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -51,7 +48,7 @@ if (!isset($_GET['idea_id'])) {
 $idea_id = $_GET['idea_id'];
 
 
-$stmt = $conn->prepare("SELECT * FROM ideas WHERE id = ?");
+$stmt = $conn->prepare("SELECT * FROM sic_qa_ideas WHERE id = ?");
 $stmt->bind_param("i", $idea_id);
 $stmt->execute();
 $result = $stmt->get_result();
