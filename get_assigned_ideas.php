@@ -55,8 +55,8 @@ function getIdeasByEvaluatorId($evaluatorId) {
 
     $query = "
     SELECT i.*,ie.status
-    FROM sic_qa_ideas i
-    INNER JOIN sic_qa_idea_evaluators ie ON i.id = ie.idea_id
+    FROM e_ideas i
+    INNER JOIN e_idea_evaluators ie ON i.id = ie.idea_id
     WHERE ie.evaluator_id = ?
 ";
 

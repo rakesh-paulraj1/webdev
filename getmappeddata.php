@@ -14,8 +14,8 @@ if (empty($idea_id)) {
 // Prepare the SQL query to fetch the mapped evaluators for the given idea_id
 $stmt = $conn->prepare(
     "SELECT ie.evaluator_id, CONCAT(e.first_name, ' ', e.last_name) AS evaluator_name, ie.score, ie.evaluator_comments
-     FROM sic_qa_idea_evaluators ie
-     JOIN sic_qa_evaluator e ON ie.evaluator_id = e.id
+     FROM e_idea_evaluators ie
+     JOIN e_evaluator e ON ie.evaluator_id = e.id
      WHERE ie.idea_id = ?"
 );
 $stmt->bind_param("i", $idea_id);

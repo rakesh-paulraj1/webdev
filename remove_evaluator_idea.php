@@ -31,7 +31,7 @@ if ($idea_count == 0) {
 }
 
 // Check if the evaluator_id exists in the evaluator table
-$stmt_check_evaluator = $conn->prepare("SELECT COUNT(*) FROM sic_qa_evaluator WHERE id = ?");
+$stmt_check_evaluator = $conn->prepare("SELECT COUNT(*) FROM e_evaluator WHERE id = ?");
 $stmt_check_evaluator->bind_param("i", $evaluator_id);
 $stmt_check_evaluator->execute();
 $stmt_check_evaluator->bind_result($evaluator_count);
@@ -48,14 +48,14 @@ $conn->autocommit(false);
 
 try {
     // Delete the evaluator from the idea_evaluators table
-    $stmt_delete = $conn->prepare("DELETE FROM sic_qa_idea_evaluators WHERE idea_id = ? AND evaluator_id = ?");
+    $stmt_delete = $conn->prepare("DELETE FROM e_idea_evaluators WHERE idea_id = ? AND evaluator_id = ?");
     $stmt_delete->bind_param("ii", $idea_id, $evaluator_id);
     $stmt_delete->execute();
 
     // Check if the record was deleted successfully
     if ($stmt_delete->affected_rows > 0) {
         // Check if there are any remaining evaluators for the idea
-        $stmt_check_remaining = $conn->prepare("SELECT COUNT(*) FROM sic_qa_idea_evaluators WHERE idea_id = ?");
+        $stmt_check_remaining = $conn->prepare("SELECT COUNT(*) FROM e_idea_evaluators WHERE idea_id = ?");
         $stmt_check_remaining->bind_param("i", $idea_id);
         $stmt_check_remaining->execute();
         $stmt_check_remaining->bind_result($remaining_evaluators);
@@ -64,7 +64,7 @@ try {
 
         // If no evaluators remain, update the status of the idea to 3
         if ($remaining_evaluators == 0) {
-            $stmt_update_status = $conn->prepare("UPDATE sic_qa_ideas SET status_id = 3 WHERE id = ?");
+            $stmt_update_status = $conn->prepare("UPDATE e_ideas SET status_id = 3 WHERE id = ?");
             $stmt_update_status->bind_param("i", $idea_id);
             $stmt_update_status->execute();
         }

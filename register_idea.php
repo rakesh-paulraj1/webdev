@@ -88,7 +88,7 @@ $conn->autocommit(false);
 
 try {
     // Insert the idea into the ideas table with status_id as 3 (Pending)
-    $stmt = $conn->prepare("INSERT INTO sic_qa_ideas (student_name, school, idea_title, status_id, theme_id, type, idea_description) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO e_ideas (student_name, school, idea_title, status_id, theme_id, type, idea_description) VALUES (?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("sssiiss", $student_name, $school, $idea_title, $status_id, $theme_id, $type, $idea_description);
     $stmt->execute();
     

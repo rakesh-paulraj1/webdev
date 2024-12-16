@@ -54,7 +54,7 @@ if (isset($_GET['evaluator_id'])) {
 $adminEmail = checkJwtCookie(); // Validate the admin session using cookies
 
 // Check if the evaluator exists and is pending approval
-$stmt = $conn->prepare("SELECT id FROM sic_qa_evaluator WHERE id = ? AND evaluator_status = 3"); // 3 means pending
+$stmt = $conn->prepare("SELECT id FROM e_evaluator WHERE id = ? AND evaluator_status = 3"); // 3 means pending
 $stmt->bind_param("i", $evaluator_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -63,12 +63,12 @@ if ($result->num_rows === 0) {
     echo json_encode(["error" => "Evaluator ID not found or already approved."]);
 } else {
     // Approve the evaluator
-    $stmt = $conn->prepare("UPDATE sic_qa_evaluator SET evaluator_status = 1 WHERE id = ?");
+    $stmt = $conn->prepare("UPDATE e_evaluator SET evaluator_status = 1 WHERE id = ?");
     $stmt->bind_param("i", $evaluator_id);
 
     if ($stmt->execute()) {
         // Fetch the evaluator's email
-        $stmt = $conn->prepare("SELECT email FROM sic_qa_evaluator WHERE id = ?");
+        $stmt = $conn->prepare("SELECT email FROM e_evaluator WHERE id = ?");
         $stmt->bind_param("i", $evaluator_id);
         $stmt->execute();
         $stmt->bind_result($evaluatorEmail);

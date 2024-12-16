@@ -66,7 +66,7 @@ $status_id = 3; // Default status: Pending
 $conn->autocommit(false);
 
 try {
-    $stmt = $conn->prepare("INSERT INTO sic_qa_ideas (student_name, school, idea_title, status_id, theme_id, type, idea_description) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO e_ideas (student_name, school, idea_title, status_id, theme_id, type, idea_description) VALUES (?, ?, ?, ?, ?, ?, ?)");
 
     foreach ($input as $idea) {
         // Validate fields

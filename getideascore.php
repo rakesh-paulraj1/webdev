@@ -39,9 +39,9 @@ $stmt = $conn->prepare(
         i.school AS school,
         i.type AS idea_type
 
-     FROM sic_qa_idea_evaluators ie
-     JOIN sic_qa_evaluator e ON ie.evaluator_id = e.id
-     JOIN sic_qa_ideas i ON ie.idea_id = i.id
+     FROM e_idea_evaluators ie
+     JOIN e_evaluator e ON ie.evaluator_id = e.id
+     JOIN e_ideas i ON ie.idea_id = i.id
      WHERE ie.idea_id = ? AND ie.evaluator_id = ?"
 );
 $stmt->bind_param("ii", $idea_id, $evaluator_id);

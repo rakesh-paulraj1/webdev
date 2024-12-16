@@ -55,7 +55,7 @@ function sanitizeInput($data) {
 // Function to check if an email is already registered
 function isEmailRegistered($email) {
     global $conn;
-    $query = "SELECT id FROM sic_qa_evaluator WHERE email = ?";
+    $query = "SELECT id FROM e_evaluator WHERE email = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -85,7 +85,7 @@ function validateThemeIds($theme_ids) {
     $validThemeIds = [];
 
     foreach ($theme_ids as $theme_id) {
-        $query = "SELECT id FROM sic_qa_theme WHERE id = ?";
+        $query = "SELECT id FROM e_theme WHERE id = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param("i", $theme_id);
         $stmt->execute();
@@ -156,7 +156,7 @@ function handleSignup($data) {
         exit;
     }
 
-    $stmt = $conn->prepare("INSERT INTO sic_qa_evaluator (
+    $stmt = $conn->prepare("INSERT INTO e_evaluator (
         first_name, last_name, gender, email, alternate_email, phone_number, 
         alternate_phone_number, college_name, designation, total_experience, 
         city, state, knowledge_domain, theme_preference_1, theme_preference_2, 

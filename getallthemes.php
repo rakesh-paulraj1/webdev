@@ -45,7 +45,7 @@ function checkJwtCookie() {
 checkJwtCookie();
 
 // Fetch all ideas
-$stmt = $conn->prepare("SELECT * FROM sic_qa_theme");
+$stmt = $conn->prepare("SELECT * FROM e_theme");
 $stmt->execute();
 $result = $stmt->get_result();
 

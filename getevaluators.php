@@ -59,7 +59,7 @@ function checkJwtCookie() {
 $adminData = checkJwtCookie();
 
 // Fetch all evaluators from the database
-$sql = "SELECT * FROM sic_qa_evaluator";
+$sql = "SELECT * FROM e_evaluator";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {

@@ -80,7 +80,7 @@ try {
 
     // Fetch ideas assigned to the evaluator if role is 'evaluator'
     if ($role === 'evaluator') {
-        $stmt = $conn->prepare("SELECT * FROM sic_qa_ideas WHERE assigned_count = ?");
+        $stmt = $conn->prepare("SELECT * FROM e_ideas WHERE assigned_count = ?");
         $stmt->bind_param("s", $role);
 
     // Fetch all ideas if role is 'admin'

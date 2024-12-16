@@ -31,14 +31,14 @@ if (isset($data) && is_array($data)) {
             $status_id = 3; // Default status for new idea
 
             // Insert the idea into the database
-            $insertStmt = $conn->prepare("INSERT INTO sic_qa_ideas (student_name, school, idea_title, status_id, theme_id, type, idea_description) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $insertStmt = $conn->prepare("INSERT INTO e_ideas (student_name, school, idea_title, status_id, theme_id, type, idea_description) VALUES (?, ?, ?, ?, ?, ?, ?)");
             $insertStmt->bind_param("sssiiss", $student_name, $school, $idea_title, $status_id, $theme_id, $type, $idea_description);
 
             if ($insertStmt->execute()) {
                 $idea_id = $insertStmt->insert_id; // Get the auto-generated idea_id
 
                 // Insert the individual evaluator IDs into the idea_evaluators table
-                $insertEvaluatorStmt = $conn->prepare("INSERT INTO sic_qa_idea_evaluators (idea_id, evaluator_id) VALUES (?, ?)");
+                $insertEvaluatorStmt = $conn->prepare("INSERT INTO e_idea_evaluators (idea_id, evaluator_id) VALUES (?, ?)");
 
                 // Insert evaluator_id_1, evaluator_id_2, and evaluator_id_3 if they are provided
                 if (!empty($evaluator_id_1)) {
@@ -66,7 +66,7 @@ if (isset($data) && is_array($data)) {
                 }
 
                 // Update the status of the idea to 2 (Assigned) after adding evaluators
-                $updateStatusStmt = $conn->prepare("UPDATE sic_qa_ideas SET status_id = 2 WHERE id = ?");
+                $updateStatusStmt = $conn->prepare("UPDATE e_ideas SET status_id = 2 WHERE id = ?");
                 $updateStatusStmt->bind_param("i", $idea_id);
                 $updateStatusStmt->execute();
             } else {

@@ -63,7 +63,7 @@ function generateToken($email, $role, $id, $secretKey) {
 }
 $expirationTime = time() + (86400 * 7);
 // Check credentials in the evaluator table
-$stmt = $conn->prepare("SELECT id, password FROM sic_qa_evaluator WHERE email = ?");
+$stmt = $conn->prepare("SELECT id, password FROM e_evaluator WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $stmt->store_result();
@@ -92,7 +92,7 @@ if ($stmt->num_rows > 0) {
 }
 
 
-$stmt = $conn->prepare("SELECT id, password FROM sic_qa_admin WHERE email = ?");
+$stmt = $conn->prepare("SELECT id, password FROM e_admin WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $stmt->store_result();

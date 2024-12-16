@@ -70,10 +70,10 @@ function getCommonStatistics() {
     // Query to get the common statistics with accurate counts for ideas and evaluators
     $query = "
         SELECT 
-            (SELECT COUNT(*) FROM sic_qa_ideas) AS ideas_registered,  -- Total ideas across all evaluators
-            (SELECT COUNT(*) FROM sic_qa_evaluator WHERE delete_status = 0) AS total_evaluators,  -- Total evaluators where delete_status is 0 (active)
-            (SELECT COUNT(*) FROM sic_qa_ideas WHERE status_id = 3) AS pending_ideas,  -- Ideas with pending verification
-            (SELECT COUNT(*) FROM sic_qa_evaluator WHERE evaluator_status = 3) AS pending_evaluators  -- Evaluators with status 0 (pending)";
+            (SELECT COUNT(*) FROM e_ideas) AS ideas_registered,  -- Total ideas across all evaluators
+            (SELECT COUNT(*) FROM e_evaluator WHERE delete_status = 0) AS total_evaluators,  -- Total evaluators where delete_status is 0 (active)
+            (SELECT COUNT(*) FROM e_ideas WHERE status_id = 3) AS pending_ideas,  -- Ideas with pending verification
+            (SELECT COUNT(*) FROM e_evaluator WHERE evaluator_status = 3) AS pending_evaluators  -- Evaluators with status 0 (pending)";
 
     $stmt = $conn->prepare($query);
 
@@ -100,7 +100,7 @@ function getCommonStatistics() {
 function getEvaluators() {
     global $conn;
 
-    $query = "SELECT id, first_name, last_name, email,evaluator_status, phone_number, city, state FROM sic_qa_evaluator WHERE delete_status = 0";
+    $query = "SELECT id, first_name, last_name, email,evaluator_status, phone_number, city, state FROM e_evaluator WHERE delete_status = 0";
     $stmt = $conn->prepare($query);
 
     if ($stmt === false) {

@@ -48,7 +48,7 @@ if (!isset($_GET['idea_id'])) {
 $idea_id = $_GET['idea_id'];
 
 
-$stmt = $conn->prepare("SELECT * FROM sic_qa_ideas WHERE id = ?");
+$stmt = $conn->prepare("SELECT * FROM e_ideas WHERE id = ?");
 $stmt->bind_param("i", $idea_id);
 $stmt->execute();
 $result = $stmt->get_result();

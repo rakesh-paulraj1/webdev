@@ -34,7 +34,7 @@ function getJsonInput() {
 // Function to check if evaluator exists by ID
 function evaluatorExists($evaluator_id) {
     global $conn;
-    $query = "SELECT id FROM sic_qa_evaluator WHERE id = ?";
+    $query = "SELECT id FROM e_evaluator WHERE id = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("i", $evaluator_id);
     $stmt->execute();
@@ -56,7 +56,7 @@ function updateEvaluatorStatus($evaluator_id, $status) {
     }
 
     // Update the evaluator_status
-    $query = "UPDATE sic_qa_evaluator SET evaluator_status = ? WHERE id = ?";
+    $query = "UPDATE e_evaluator SET evaluator_status = ? WHERE id = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("ii", $status, $evaluator_id);
 

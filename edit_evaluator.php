@@ -78,7 +78,7 @@ if ($evaluator_id === null) {
 }
 
 // Ensure the evaluator exists and is active
-$stmt = $conn->prepare("SELECT id FROM sic_qa_evaluator WHERE id = ? AND evaluator_status = 1");
+$stmt = $conn->prepare("SELECT id FROM e_evaluator WHERE id = ? AND evaluator_status = 1");
 $stmt->bind_param("i", $evaluator_id);
 $stmt->execute();
 $result = $stmt->get_result();
