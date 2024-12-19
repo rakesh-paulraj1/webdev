@@ -1,27 +1,6 @@
 <?php
 
-$origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '*';
-
-// Define allowed origins (add your frontend URLs here)
-$allowedOrigins = [
-    'http://localhost:5173',  // Example frontend for development
-    'http://example.com',     // Example production URL
-];
-
-// Check if the origin is allowed or fallback to '*'
-if (in_array($origin, $allowedOrigins)) {
-    header("Access-Control-Allow-Origin: $origin");
-} else {
-    header("Access-Control-Allow-Origin: *"); // Allow all (use with caution in production)
-}
-
-// Always set credentials
-header("Access-Control-Allow-Credentials: true");
-
-// Define allowed methods and headers
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
-
+require 'cors.php';
 // Handle preflight (OPTIONS) requests
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -61,7 +40,7 @@ function generateToken($email, $role, $id, $secretKey) {
     ];
     return JWT::encode($payload, $secretKey, 'HS256');
 }
-$expirationTime = time() + (86400 * 7);
+$expirationTime = time() + (30 * 24 * 60 * 60); 
 // Check credentials in the evaluator table
 $stmt = $conn->prepare("SELECT id, password FROM e_evaluator WHERE email = ?");
 $stmt->bind_param("s", $email);
@@ -77,9 +56,10 @@ if ($stmt->num_rows > 0) {
 
         setcookie("auth_token", $jwt, [
             'expires' => $expirationTime,
-            'path' => '/',
-            'httponly' => false,
-            'secure' => false,
+    'path' => '/',
+    'httponly' => true,
+    'secure' => true,
+    'samesite' => 'Strict'
         ]);
 
         echo json_encode(["message" => "success", "role" => "evaluator", "id" => $id]);
@@ -106,9 +86,10 @@ if ($stmt->num_rows > 0) {
 
         setcookie("auth_token", $jwt, [
             'expires' => $expirationTime,
-            'path' => '/',
-            'httponly' => false,
-            'secure' => false,
+    'path' => '/',
+    'httponly' => true,
+    'secure' => true,
+    'samesite' => 'Strict'
         ]);
 
         echo json_encode(["message" => "success", "role" => "admin", "id" => $id]);

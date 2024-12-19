@@ -21,7 +21,6 @@ if (isset($data['idea_id'], $data['evaluator_ids']) && is_array($data['evaluator
     // Prepare the statement for inserting evaluator mappings
     $insertEvaluatorStmt = $conn->prepare("INSERT INTO e_idea_evaluators (idea_id, evaluator_id) VALUES (?, ?)");
 
-    // Loop through the evaluator_ids and insert each one into the database
     foreach ($evaluator_ids as $evaluator_id) {
         if (!empty($evaluator_id)) {
             $insertEvaluatorStmt->bind_param("ii", $idea_id, $evaluator_id);

@@ -4,15 +4,15 @@ $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '*';
 
 // Define allowed origins (add your frontend URLs here)
 $allowedOrigins = [
-    'http://localhost:5173',  // Example frontend for development
-    'http://example.com',     // Example production URL
+    'http://localhost:5173',
+    `https://sic.tsrm.in`
 ];
 
 // Check if the origin is allowed or fallback to '*'
 if (in_array($origin, $allowedOrigins)) {
     header("Access-Control-Allow-Origin: $origin");
 } else {
-    header("Access-Control-Allow-Origin: *"); // Allow all (use with caution in production)
+    header("Access-Control-Allow-Origin: *"); 
 }
 
 // Always set credentials

@@ -67,7 +67,7 @@ function isEmailRegistered($email) {
 }
 function isEmailInAdminTable($email) {
     global $conn;
-    $query = "SELECT id FROM admin WHERE email = ?";
+    $query = "SELECT id FROM e_admin WHERE email = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("s", $email);
     $stmt->execute();

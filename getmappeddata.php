@@ -1,5 +1,4 @@
 <?php
-// Handle the preflight (OPTIONS) request
 require 'cors.php';
 include 'db.php';
 
