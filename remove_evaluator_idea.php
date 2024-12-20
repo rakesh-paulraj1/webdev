@@ -18,7 +18,7 @@ if (empty($idea_id) || empty($evaluator_id)) {
 }
 
 // Check if the idea_id exists in the ideas table
-$stmt_check_idea = $conn->prepare("SELECT COUNT(*) FROM ideas WHERE id = ?");
+$stmt_check_idea = $conn->prepare("SELECT COUNT(*) FROM e_ideas WHERE id = ?");
 $stmt_check_idea->bind_param("i", $idea_id);
 $stmt_check_idea->execute();
 $stmt_check_idea->bind_result($idea_count);
